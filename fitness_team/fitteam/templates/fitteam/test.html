@@ -1,0 +1,25 @@
+{% extends 'fitteam/layout.html' %}
+
+{% block body %}
+<divc class="container">
+    <div class="row">
+        <div class="col-8">
+            <h3>Container 1</h3>
+        </div>
+        <div class="4">
+            <h3>Container 2</h3>
+        </div>
+    </div>
+    <div>
+
+    </div>
+</div>
+{{user}}
+{{other}}
+{{user.first_name}}
+{{user.last_name}}
+{{other.sex}}
+{{other.height}}
+{{other.date_of_birth}}
+
+{% endblock %}

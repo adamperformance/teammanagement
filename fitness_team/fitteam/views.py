@@ -1,17 +1,65 @@
 from django.shortcuts import render
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models import User
+from .models import User, BasicInfo
+
 
 # Create your views here.
 
 
-def index(request):
-    return render(request, 'fitteam/index.html')
+# @allowed_users(allowed_roles=['ROLENAME']) <-- this can be used to separate the superuser and the user
+# ROLENAME eg 'customer'
+# @login_required(login_url='login')
 
+def index(request):
+    
+    # Authenticated users view their inbox
+    if request.user.is_authenticated:
+        return render(request, "fitteam/index.html")
+
+    # Everyone else is prompted to sign in
+    else:
+        return HttpResponseRedirect(reverse("login"))
+
+
+def basicinfo(request):
+
+    if request.method == "POST":
+        user = User.objects.get(username=request.user)
+        user.last_name = request.POST["last_name"]
+        user.first_name = request.POST["first_name"]
+        user.save()
+
+        height = request.POST["height"]
+        sex = request.POST["sex"]
+        date_of_birth = request.POST["date_of_birth"]
+        profile_pic = request.FILES["profile_pic"]
+
+        try:
+            basic = BasicInfo.objects.get(pk=user.id)
+            basic.sex = sex
+            basic.height = height
+            basic.date_of_birth = date_of_birth
+            basic.profile_pic = profile_pic
+            basic.save()
+        except ObjectDoesNotExist:
+            basic = BasicInfo(user=user, sex=sex, height=height, date_of_birth=date_of_birth, profile_pic=profile_pic)
+            basic.save()
+
+        return render(request, 'fitteam/test.html', {
+            "user": user,
+            "other": basic
+        })
+    else:
+        return render(request, 'fitteam/basicinfo.html')
+
+
+def profile(request):
+    return render(request, "fitteam/profile_page.html")
 
 def login_view(request):
 

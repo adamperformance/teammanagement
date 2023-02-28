@@ -1,0 +1,31 @@
+{% extends 'fitteam/layout.html' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            <div class="card" style="width: 18rem;">
+                <img src="{{request.user.basic.profile_pic.url}}" class="card-img-top profile-pic" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">{{request.user.last_name}} {{request.user.first_name}}</h5>
+                  <p class="card-text">{{request.user.basic.height}}</p>
+                  <p class="card-text">{{request.user.basic.sex}}</p>
+                  <p class="card-text">{{request.user.basic.age}}</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+        </div>
+        <div class="col-6">
+            <h3>Container 1</h3>
+        </div>
+        <div class="col-2">
+            <h3>Container 2</h3>
+        </div>
+    </div>
+    <div>
+
+    </div>
+</div>
+
+
+{% endblock %}
