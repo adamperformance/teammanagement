@@ -5,8 +5,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models import User, BasicInfo
+from .models import User, BasicInfo, ProgressPics
 
+import datetime
 
 # Create your views here.
 
@@ -60,6 +61,26 @@ def basicinfo(request):
 
 def profile(request):
     return render(request, "fitteam/profile_page.html")
+
+def before_after(request):
+
+    return render(request, "fitteam/before_after.html")
+
+def upload(request):
+
+    if request.method == 'POST':
+        progress_pic = ProgressPics()
+        progress_pic.user = request.user
+        if request.POST["date"] != "":
+            progress_pic.date = request.POST["date"]
+        else:
+            progress_pic.date = datetime.datetime.now()
+        progress_pic.progress_pic = request.FILES["progress_pic"]
+        progress_pic.save()
+        return HttpResponseRedirect(reverse('before_after'))
+    else:
+        return render(request, 'fitteam/upload.html', {
+        })
 
 def login_view(request):
 

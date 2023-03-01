@@ -1,0 +1,60 @@
+{% extends 'fitteam/layout.html' %}
+
+{% block body %}
+
+<div class="container">
+
+    <!-- have 2 divs right next to each other, pictures are touching 
+            left side of left picture you can choose what date to check -> corresponding progress pic
+            will show up
+            right side of the right picture the same
+        
+        under this comparison a grid of all the progress pics -- if one is clicked, that should show up in
+        one of the above containers-->
+    
+    <div class="row justify-content-center g-0">
+        <div class="col">
+            <div style="display: flex; flex-direction: row; justify-content: right; border-style: solid;">
+                <div style="border-style: solid;">
+                    <h2>Előtte</h2>
+                    <h3>Dátum</h3>
+                    <select>
+                        {% for pic in request.user.progresspics_set.all%}
+                            <option>{{pic.date}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <img src="../../static/fitteam/images/progress_pics/2.jpg" style="width: 35%; height: 40%">
+            </div>
+        </div>
+
+        <div class="col">
+            <div style="display: flex; flex-direction: row;justify-content: left; border-style: solid;">
+                <img src="../../static/fitteam/images/progress_pics/7.jpg" style="width: 35%; height: 40%;">
+                <div>
+                    <h2>Utána</h2>
+                    <h3>Dátum</h3>
+                    <select>
+                        {% for pic in request.user.progresspics_set.all %}
+                            <option>{{pic.date}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div style="display: flex; flex-direction: row;">
+    {% for pic in request.user.progresspics_set.all %}
+        <div class="card" style="width: 10rem;">
+            <img src="{{pic.progress_pic.url}}" class="card-img-top profile-pic" alt="...">
+            <div class="card-body">
+                <p>{{pic.date}}</p>
+            </div>
+        </div> 
+    {% endfor %}  
+</div>
+
+{% endblock %}

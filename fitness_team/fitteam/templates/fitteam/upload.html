@@ -1,0 +1,12 @@
+{% extends 'fitteam/layout.html' %}
+
+{% block body %}
+
+<form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="date" name="date">
+    <input type="file" name="progress_pic">
+    <input type="submit" value="Feltöltés">
+</form>
+
+{% endblock %}
