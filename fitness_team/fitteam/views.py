@@ -2,12 +2,14 @@ from django.shortcuts import render
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+import json
 
 from .models import User, BasicInfo, ProgressPics
 
 import datetime
+
 
 # Create your views here.
 
@@ -63,8 +65,20 @@ def profile(request):
     return render(request, "fitteam/profile_page.html")
 
 def before_after(request):
+    print(request.user.username)
+    user = User.objects.get(username=request.user.username)
+    pics = user.progresspics_set.all()
 
-    return render(request, "fitteam/before_after.html")
+    dates = []
+
+    for pic in pics:
+        x = pic.date
+        date = x.strftime('%b. %-d, %Y')
+        dates.append(date)
+
+    return render(request, "fitteam/before_after.html", {
+        "dates":dates
+    })
 
 def upload(request):
 
@@ -81,6 +95,25 @@ def upload(request):
     else:
         return render(request, 'fitteam/upload.html', {
         })
+
+def picture(request):
+    user = request.user
+    pics = ProgressPics.objects.filter(user=user)
+
+    pictures = {}
+
+    for pic in pics:
+        x = pic.date
+        date = x.strftime('%b. %-d, %Y')
+        pictures[date] = pic.progress_pic.url
+    
+    # return render(request, "fitteam/tits.html", {
+    #     "pic":pictures,
+    #     "dates":pics    
+    # })
+
+    return JsonResponse(pictures)
+
 
 def login_view(request):
 

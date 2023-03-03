@@ -1,0 +1,12 @@
+{% extends 'fitteam/layout.html' %}
+
+{% block body %}
+
+    {{pic}}
+    {% for x in dates %}
+
+        {{x.date}}
+
+    {% endfor %}
+
+{% endblock %}

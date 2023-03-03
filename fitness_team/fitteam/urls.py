@@ -11,5 +11,8 @@ urlpatterns = [
     path('basicinfo', views.basicinfo, name='basicinfo'),
     path('profile', views.profile, name="profile"),
     path('before_after', views.before_after, name="before_after"),
-    path('upload', views.upload, name="upload")
+    path('upload', views.upload, name="upload"),
+
+    # API
+    path('picture', views.picture, name="picture")
 ]

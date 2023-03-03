@@ -11,30 +11,30 @@
         
         under this comparison a grid of all the progress pics -- if one is clicked, that should show up in
         one of the above containers-->
-    
+
     <div class="row justify-content-center g-0">
         <div class="col">
             <div style="display: flex; flex-direction: row; justify-content: right; border-style: solid;">
                 <div style="border-style: solid;">
                     <h2>Előtte</h2>
                     <h3>Dátum</h3>
-                    <select>
-                        {% for pic in request.user.progresspics_set.all%}
-                            <option>{{pic.date}}</option>
+                    <select name="before">
+                        {% for date in dates %}
+                            <option>{{date}}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <img src="../../static/fitteam/images/progress_pics/2.jpg" style="width: 35%; height: 40%">
+                <img src="" id="before_picture" style="width: 35%; height: 40%">
             </div>
         </div>
 
         <div class="col">
             <div style="display: flex; flex-direction: row;justify-content: left; border-style: solid;">
-                <img src="../../static/fitteam/images/progress_pics/7.jpg" style="width: 35%; height: 40%;">
+                <img src="" id="after_picture" style="width: 35%; height: 40%;">
                 <div>
                     <h2>Utána</h2>
                     <h3>Dátum</h3>
-                    <select>
+                    <select name="after">
                         {% for pic in request.user.progresspics_set.all %}
                             <option>{{pic.date}}</option>
                         {% endfor %}
