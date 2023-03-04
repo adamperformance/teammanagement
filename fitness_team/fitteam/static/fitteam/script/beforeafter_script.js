@@ -71,31 +71,46 @@ document.addEventListener('DOMContentLoaded', () => {
         
 
         // functionality: select before and after pics by clicking on pictures displayed
-        // maybe add green selection (border) to clicked pictures?
 
+        // create before-after "touples" - one for the actual URLs(selection), one for the elements selected (clicked)
         let click_selection = {"before":"", "after":""}
+        let clicked_elements = {"before":"", "after":""}
 
         document.addEventListener('click', event => {
-            console.log(event.target.nodeName)
-
+            
             elem = event.target
 
-            if (click_selection["before"] === "" && elem.nodeName == "IMG") {
-                console.log(elem.src)
+            // if nothing is selected yet OR both a before and after is selected and we want a new selection
+            if ((click_selection["before"] === "" && elem.nodeName == "IMG") || (click_selection["before"] != "" && click_selection["after"] != "" && elem.nodeName === "IMG")) {
+                
+                // if both selected, set everything back to "zero"
+                if (click_selection["before"] != "" && click_selection["after"] != "" && elem.nodeName === "IMG") {
+                    click_selection["before"] = ""
+                    click_selection["after"] = ""
+                    clicked_elements["before"].style.border = "none"
+                    clicked_elements["after"].style.border = "none"
+                }
+
+
+                clicked_elements["before"] = elem
                 click_selection["before"] = elem.src
-                console.log(click_selection)
+                elem.style.border = "solid"
+                elem.style.borderColor = "green"
+
+                // set big before image displayed
+                before_picture_img.src = click_selection["before"]
             }
 
-            if (click_selection["before"] != "" && click_selection["after"] === "" && elem.nodeName == "IMG") {
-                console.log(elem.src)
+            // if the before is already selected
+            else if (click_selection["before"] != "" && click_selection["after"] === "" && elem.nodeName === "IMG") {
+                clicked_elements["after"] = elem
                 click_selection["after"] = elem.src
-                console.log(click_selection)
+                elem.style.border = "solid"
+                elem.style.borderColor = "red"
+
+                // set the big after image displayed
+                after_picture_img.src = click_selection["after"]
             }
-
-
-
         })
-
-
     })
 })
