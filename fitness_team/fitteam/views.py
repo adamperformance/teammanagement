@@ -64,8 +64,9 @@ def basicinfo(request):
 def profile(request):
     return render(request, "fitteam/profile_page.html")
 
+
 def before_after(request):
-    print(request.user.username)
+
     user = User.objects.get(username=request.user.username)
     pics = user.progresspics_set.all()
 
@@ -74,13 +75,17 @@ def before_after(request):
     for pic in pics:
         x = pic.date
         date = x.strftime('%b. %-d, %Y')
-        dates.append(date)
+        if date not in dates:
+            dates.append(date)
 
     return render(request, "fitteam/before_after.html", {
         "dates":dates
     })
 
 def upload(request):
+
+    # additional functionality needed - check if there is already and input for the given day
+    # if there is, overwrite that - 1 triplet of pictures / day!
 
     if request.method == 'POST':
         progress_pic = ProgressPics()
@@ -89,6 +94,7 @@ def upload(request):
             progress_pic.date = request.POST["date"]
         else:
             progress_pic.date = datetime.datetime.now()
+        progress_pic.pic_direction = request.POST["direction"]
         progress_pic.progress_pic = request.FILES["progress_pic"]
         progress_pic.save()
         return HttpResponseRedirect(reverse('before_after'))
@@ -96,20 +102,46 @@ def upload(request):
         return render(request, 'fitteam/upload.html', {
         })
 
+
 def picture(request):
     user = request.user
-    pics = ProgressPics.objects.filter(user=user)
+    pics = ProgressPics.objects.filter(user=user).order_by('date')
 
+    list_of_dates = []
     pictures = {}
 
+    list_of = []
+    x = {"front":"","side":"","back":""}
+
     for pic in pics:
-        x = pic.date
-        date = x.strftime('%b. %-d, %Y')
-        pictures[date] = pic.progress_pic.url
+
+        # create dictionary of pic triplets {'front':url1,'side':url2,'back':url3}
+        if pic.pic_direction == "Front":
+            x["front"] = pic.progress_pic.url
+        elif pic.pic_direction == "Side":
+            x["side"] = pic.progress_pic.url
+        elif pic.pic_direction == "Back":
+            x["back"] = pic.progress_pic.url
+
+        if x["front"] != "" and x["side"] != "" and x["back"] != "":
+            list_of.append(x)
+            x = {"front":"","side":"","back":""}
+        
+        # format date properly and create a list of the disctinct dates
+        y = pic.date
+        date = y.strftime('%b. %-d, %Y')
+
+        if date not in list_of_dates:  
+            list_of_dates.append(date)
+    
+    # create a dictionary where the keys are the dates and the values are the picture triplets
+    for i in range(len(list_of_dates)):
+        pictures[list_of_dates[i]]=list_of[i]
     
     # return render(request, "fitteam/tits.html", {
-    #     "pic":pictures,
-    #     "dates":pics    
+    #     "pic":list_of_dates,
+    #     "dates":list_of,
+    #     "luck":pictures
     # })
 
     return JsonResponse(pictures)

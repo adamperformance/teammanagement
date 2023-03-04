@@ -34,12 +34,16 @@ class BasicInfo(models.Model):
         return f"{self.user.username} basic"
 
 class ProgressPics(models.Model):
+    DIR = (
+    ('Front', 'Front'),
+    ('Side', 'Side'),
+    ('Back','Back')
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     progress_pic = models.ImageField(upload_to="progress_pics")
-
-    # Will need 1 additional field, that will be a multiplechoice field
-    # to select "front", "side", "back"
+    pic_direction = models.CharField(null=True, max_length=64, choices=DIR)
 
     def __str__(self):
-        return f"{self.user.username} {self.date}"
+        return f"{self.user.username} {self.date} {self.pic_direction}"

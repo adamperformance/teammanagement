@@ -23,6 +23,12 @@
                             <option>{{date}}</option>
                         {% endfor %}
                     </select>
+                    <br>
+                    <select name="direction">
+                        <option value="Front">Front</option>
+                        <option value="Side">Side</option>
+                        <option value="Back">Back</option>
+                    </select>
                 </div>
                 <img src="" id="before_picture" style="width: 35%; height: 40%">
             </div>
@@ -35,9 +41,15 @@
                     <h2>Utána</h2>
                     <h3>Dátum</h3>
                     <select name="after">
-                        {% for pic in request.user.progresspics_set.all %}
-                            <option>{{pic.date}}</option>
+                        {% for date in dates %}
+                            <option>{{date}}</option>
                         {% endfor %}
+                    </select>
+                    <br>
+                    <select name="direction">
+                        <option value="Front">Front</option>
+                        <option value="Side">Side</option>
+                        <option value="Back">Back</option>
                     </select>
                 </div>
             </div>
@@ -46,12 +58,13 @@
     </div>
 
 </div>
-<div style="display: flex; flex-direction: row;">
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
     {% for pic in request.user.progresspics_set.all %}
         <div class="card" style="width: 10rem;">
             <img src="{{pic.progress_pic.url}}" class="card-img-top profile-pic" alt="...">
             <div class="card-body">
                 <p>{{pic.date}}</p>
+                <p>{{pic.pic_direction}}</p>
             </div>
         </div> 
     {% endfor %}  

@@ -17,8 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // get the 2 dropdown selectors by name
         let before = document.getElementsByName("before")
         let after = document.getElementsByName("after")
+        let direction = document.getElementsByName("direction")
         let before_picture = before[0]
         let after_picture = after[0]
+        let before_dir = direction[0]
+        let after_dir = direction[1]
 
         // get the images elements on the page
         const before_picture_img = document.getElementById('before_picture')
@@ -26,51 +29,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // set the default value to the default value of the dropdown selector
         // this way pics will show up when the page is loaded
-        before_picture_img.src = pics[before_picture.value]
-        after_picture_img.src = pics[before_picture.value]
+        
+        bef_tmp = pics[before_picture.value]
+        aft_tmp = pics[after_picture.value]
 
-        // if a date is selected
+        before_picture_img.src = bef_tmp[before_dir.value.toLowerCase()]
+        after_picture_img.src = aft_tmp[after_dir.value.toLowerCase()]
+
+        // if a before date is selected
         before_picture.addEventListener('change', () => {
-
-            // get the selected value
-            before_value = before_picture.options[before_picture.selectedIndex].value;
-            
-            console.log(before_value)
-            let chosen_pic_url;
-
-            // loop through the dates
-            for (let i = 0; i < dates.length; i++) {
-
-                // if the chosen date matches a date in the list of dates
-                if (dates[i] === before_value) {
-
-                    // get the related picture url
-                    chosen_pic_url = pics[dates[i]]
-                }
-            }
-
-            // change the picture url to the selected picture's url
-            before_picture_img.src = chosen_pic_url
+            set_pic(before_picture, before_dir, before_picture_img)
         })
     
-        // comments are the same as for the "before"
+        // if an after date is selected
         after_picture.addEventListener('change', () => {
-            after_value = after_picture.options[after_picture.selectedIndex].value;
-
-            let chosen_pic_url;
-
-            for (let i = 0; i < dates.length; i++) {
-                if (dates[i] === after_value) {
-                    chosen_pic_url = pics[dates[i]]
-                }
-            }
-
-            after_picture_img.src = chosen_pic_url        
+            set_pic(after_picture, after_dir, after_picture_img)     
         })
 
-        
+        // if before direction is changed
+        before_dir.addEventListener('change', () => {
+            set_pic(before_picture, before_dir, before_picture_img)
+        })
+
+        // if after direction is changed
+        after_dir.addEventListener('change', () => {
+            set_pic(after_picture, after_dir, after_picture_img)
+        } )
+
 
         // functionality: select before and after pics by clicking on pictures displayed
+        // !!! additional function needed - when upper selection is changed, delete the below selection!!!
 
         // create before-after "touples" - one for the actual URLs(selection), one for the elements selected (clicked)
         let click_selection = {"before":"", "after":""}
@@ -114,3 +102,38 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 })
+
+function set_pic(picture, direction, picture_img) {
+
+    x = document.getElementsByTagName('img')
+    
+    for (let i = 0; i < x.length; i++) {
+        if (x[i].style.border != "") {
+            x[i].style.border = ""
+        }
+    }
+
+    // get the selected value
+    picture_value = picture.options[picture.selectedIndex].value;
+    direction_value = direction.options[direction.selectedIndex].value;
+    direction_value = direction_value.toLowerCase()
+
+    let chosen_pic_url;
+
+    // loop through the dates
+    for (let i = 0; i < dates.length; i++) {
+
+        // if the chosen date matches a date in the list of dates
+        if (dates[i] === picture_value) {
+
+            // get the related picture triplet
+            chosen_pic_set = pics[dates[i]]
+                
+            // get the selected picture based on the direction
+            chosen_pic_url = chosen_pic_set[direction_value]
+        }
+    }
+
+    // change the picture url to the selected picture's url
+    picture_img.src = chosen_pic_url
+}
