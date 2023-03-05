@@ -1,0 +1,84 @@
+{% extends 'fitteam/layout.html' %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row first">
+        <div class="col-7" id="chart">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Testsúly adatok</h1>
+                    <form action="{% url 'bodyweight' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" name="bodyweight" placeholder="Testsúly">
+                                </div>
+                                <div class="col">
+                                    <input type="date" name="date" aria-describedby="dateinput">
+                                    <div id="dateinput" class="form-text">Ha nem adsz meg dátumot, a mait rögzíti.</div>
+                                </div>
+                            </div>
+                            <div class="col bf_in">
+                                <label class="form-label" for="bfat_input">Add meg a testzsír százalékod:</label>
+                                <input class="form-control" type="text" id="bfat_input" name="bodyfat" placeholder="Testzsír százalék">
+                            </div>
+                            <div class="row">
+                                <input type="submit" name="add" value="Rögzítés">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1>Display information already input</h1>
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Dátum</th>
+                    <th scope="col">Testsúly</th>
+                    <th scope="col">Testzsír %</th>
+                    <th scope="col">Zsír tömeg</th>
+                    <th scope="col">Zsírmentes testtömeg</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for weight in weights %}
+                    <tr>
+                        <td>{{weight.date}}</td>
+                        <td>{{weight.bodyweight}}</td>
+                        {% if weight.bodyfat != 0 %}
+                        <td>{{weight.bodyfat}}</td>
+                        <td>{{weight.fm}}</td>
+                        <td>{{weight.ffm}}</td>
+                        {% else %}
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        {% endif %}
+                        <td>
+                            <form action="{% url 'bodyweight' %}" method="POST">
+                            {% csrf_token %} 
+                            <input type="submit" name="delete{{weight.date}}{{weight.bodyweight}}" value="Delete">
+                        </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

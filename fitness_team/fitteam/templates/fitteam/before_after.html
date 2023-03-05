@@ -14,7 +14,7 @@
 
     <div class="row justify-content-center g-0">
         <div class="col">
-            <div style="display: flex; flex-direction: row; justify-content: right; border-style: solid;">
+            <div class="comparison left">
                 <div style="border-style: solid;">
                     <h2>Előtte</h2>
                     <h3>Dátum</h3>
@@ -30,13 +30,13 @@
                         <option value="Back">Back</option>
                     </select>
                 </div>
-                <img src="" id="before_picture" style="width: 35%; height: 40%">
+                <img class="comparison-image" src="" id="before_picture">
             </div>
         </div>
 
         <div class="col">
-            <div style="display: flex; flex-direction: row;justify-content: left; border-style: solid;">
-                <img src="" id="after_picture" style="width: 35%; height: 40%;">
+            <div class="comparison right">
+                <img class="comparison-image" src="" id="after_picture">
                 <div>
                     <h2>Utána</h2>
                     <h3>Dátum</h3>
@@ -58,16 +58,51 @@
     </div>
 
 </div>
-<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-    {% for pic in request.user.progresspics_set.all %}
-        <div class="card" style="width: 10rem;">
-            <img src="{{pic.progress_pic.url}}" class="card-img-top profile-pic" alt="...">
-            <div class="card-body">
-                <p>{{pic.date}}</p>
-                <p>{{pic.pic_direction}}</p>
+<div style="heigt:100px">
+    <select name="grid_direction">
+        <option value="Front">Front</option>
+        <option value="Side">Side</option>
+        <option value="Back">Back</option>
+    </select>
+</div>
+
+<div class="container">
+    <div class="row picture-grid">
+    <!-- {% for pic in front_pics %}
+        <div class="col">
+            <div class="card" style="width: 10rem;">
+                <img src="{{pic.progress_pic.url}}" class="card-img-top profile-pic" alt="...">
+                <div class="card-body">
+                    <p>{{pic.date}}</p>
+                </div>
             </div>
-        </div> 
+        </div>
     {% endfor %}  
+    </div>
+    <div class="row">
+        {% for pic in side_pics %}
+            <div class="col">
+                <div class="card" style="width: 10rem;">
+                    <img src="{{pic.progress_pic.url}}" class="card-img-top profile-pic" alt="...">
+                    <div class="card-body">
+                        <p>{{pic.date}}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}  
+    </div>
+    <div class="row">
+        {% for pic in back_pics %}
+            <div class="col">
+                <div class="card" style="width: 10rem;">
+                    <img src="{{pic.progress_pic.url}}" class="card-img-top profile-pic" alt="...">
+                    <div class="card-body">
+                        <p>{{pic.date}}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}   -->
+    </div>
 </div>
 
 {% endblock %}

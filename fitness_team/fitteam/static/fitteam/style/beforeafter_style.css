@@ -1,0 +1,22 @@
+.comparison {
+    display: flex; 
+    flex-direction: row;
+    border-style: solid;
+}
+
+.comparison.left {
+    justify-content: right; 
+}
+
+.comparison.right {
+    justify-content: left;
+}
+
+.comparison-image {
+    width: 65%; 
+    height: auto;
+}
+
+.card {
+    margin: 2px;
+}

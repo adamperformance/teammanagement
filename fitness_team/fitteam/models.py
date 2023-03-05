@@ -33,6 +33,27 @@ class BasicInfo(models.Model):
     def __str__(self):
         return f"{self.user.username} basic"
 
+class BodyComposition(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    bodyweight = models.FloatField()
+    bodyfat = models.FloatField(default=0)
+
+    @property
+    def fm(self):
+        if self.bodyfat == 0:
+            return "Adj meg testzsír százalékt a számításhoz!"
+        elif self.bodyfat != 0:
+            return "{:.2f}".format(self.bodyweight * self.bodyfat/100)
+        
+    @property
+    def ffm(self):
+        if self.bodyfat == 0 and self.waist != 0:
+            return "Adj meg testzsír százalékt a számításhoz!"
+        elif self.bodyfat != 0:
+            return "{:.2f}".format(self.bodyweight - self.bodyweight * self.bodyfat/100)
+
+
 class ProgressPics(models.Model):
     DIR = (
     ('Front', 'Front'),

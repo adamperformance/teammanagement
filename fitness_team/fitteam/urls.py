@@ -12,7 +12,9 @@ urlpatterns = [
     path('profile', views.profile, name="profile"),
     path('before_after', views.before_after, name="before_after"),
     path('upload', views.upload, name="upload"),
+    path('bodyweight', views.bodyweight, name="bodyweight"),
 
     # API
-    path('picture', views.picture, name="picture")
+    path('picture', views.picture, name="picture"),
+    path('bw_api', views.bw_api, name="bw_api")
 ]

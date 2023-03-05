@@ -4,9 +4,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.utils import timezone
 import json
 
-from .models import User, BasicInfo, ProgressPics
+from .models import User, BasicInfo, ProgressPics, BodyComposition
 
 import datetime
 
@@ -82,6 +83,82 @@ def before_after(request):
         "dates":dates
     })
 
+
+def bodyweight(request):
+
+    user = request.user.username
+    user = User.objects.get(username=user)
+
+    try:
+        bw_data = user.bodycomposition_set.all().order_by('-date')
+        bw_reverse = user.bodycomposition_set.all().order_by('date')
+    except ObjectDoesNotExist:
+        bw_data = ""
+
+    number = []
+    for i in range(len(bw_data)):
+        number.append(i)
+        i += 1
+
+    x = 1
+    wght = 0
+    dates = []
+    measures = []
+
+    # if you have multiple input for 1 day, this will average it out
+    for i in range(len(bw_reverse)):
+        tmp = bw_reverse[i]
+        if i < (len(bw_reverse)-1) and tmp.date == bw_reverse[i+1].date:
+            x = x + 1
+            wght = wght + tmp.bodyweight
+        else:
+            wght = wght + tmp.bodyweight
+            a = wght / x
+            measures.append(a)
+            dates.append(tmp.date)
+            wght = 0
+            x = 1
+        i += 1
+
+    if request.method == "POST":
+        if "add" in request.POST:
+            bodyweight = request.POST["bodyweight"]
+            date = request.POST["date"]
+            bodyfat = request.POST["bodyfat"]
+            if bodyfat == "":
+                bodyfat = 0
+            if date == "":
+                date = timezone.now().date()
+            bw = BodyComposition(user=user, date=date, bodyweight=bodyweight, bodyfat=bodyfat)
+            bw.save()
+            return HttpResponseRedirect('bodyweight', {
+                "weights": bw_data,
+                "numbers":number,
+                "dates": dates,
+                "measures":measures
+            })
+        else:
+            # delete functionality does not work due to a change in the date (from Charfield to DateField)
+            for date in dates:
+                for measure in measures:
+                    measure = float(measure)
+                    if f"delete{date}{measure}" in request.POST:
+                        to_delete = BodyComposition.objects.filter(user=user, date=date, bodyweight=measure)
+                        to_delete.delete()
+
+            return HttpResponseRedirect('bodyweight', {
+                "weights": bw_data,
+                "numbers":number,
+                "dates": dates,
+                "measures":measures
+            })
+    else:
+        return render(request, 'fitteam/bodyweight.html', {
+            "weights": bw_data,
+            "dates": dates,
+            "measures":measures
+        })
+
 def upload(request):
 
     # additional functionality needed - check if there is already and input for the given day
@@ -102,6 +179,33 @@ def upload(request):
         return render(request, 'fitteam/upload.html', {
         })
 
+
+def bw_api(request):
+    user = request.user
+    bws = BodyComposition.objects.filter(user=user).order_by('date')
+
+    bodyweights = []
+
+    for bw in bws:        
+        # format date properly and create a list of the disctinct dates 
+        y = bw.date
+        date = y.strftime('%b. %-d, %Y')
+
+        x = {}
+        x["date"] = date
+        x["bodyweight"] = bw.bodyweight
+        x["bodyfat"] = bw.bodyfat
+
+        bodyweights.append(x)
+ 
+    
+    # return render(request, "fitteam/tits.html", {
+    #     "pic":bws,
+    #     "dates":list_of_dates,
+    #     "luck":list_of
+    # })
+
+    return JsonResponse(bodyweights, safe=False)
 
 def picture(request):
     user = request.user

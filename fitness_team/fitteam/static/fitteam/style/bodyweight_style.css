@@ -1,0 +1,10 @@
+#chart {
+    height: auto;
+    border-style: solid;
+    border-radius: 1px;
+}
+
+#chart .card-body {
+    height: 300px;
+    border-style: dotted;
+}
