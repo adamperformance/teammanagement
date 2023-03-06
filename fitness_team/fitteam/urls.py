@@ -13,6 +13,8 @@ urlpatterns = [
     path('before_after', views.before_after, name="before_after"),
     path('upload', views.upload, name="upload"),
     path('bodyweight', views.bodyweight, name="bodyweight"),
+    path('nutrition', views.nutrition, name="nutrition"),
+    path('chat', views.chat, name="chat"),
 
     # API
     path('picture', views.picture, name="picture"),

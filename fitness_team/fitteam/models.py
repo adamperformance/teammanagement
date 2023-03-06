@@ -53,8 +53,8 @@ class BodyComposition(models.Model):
         elif self.bodyfat != 0:
             return "{:.2f}".format(self.bodyweight - self.bodyweight * self.bodyfat/100)
 
-
 class ProgressPics(models.Model):
+
     DIR = (
     ('Front', 'Front'),
     ('Side', 'Side'),
@@ -68,3 +68,14 @@ class ProgressPics(models.Model):
 
     def __str__(self):
         return f"{self.user.username} {self.date} {self.pic_direction}"
+    
+
+
+class Nutrition(models.Model):
+    # user
+    # date - only 1 record to a given date --> if input for date exists --> update
+    # protein
+    # carbs
+    # fats
+    # kcal
+    pass

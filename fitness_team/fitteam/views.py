@@ -138,11 +138,13 @@ def bodyweight(request):
                 "measures":measures
             })
         else:
-            # delete functionality does not work due to a change in the date (from Charfield to DateField)
+            
             for date in dates:
+                conv_date = date.strftime('%b. %-d, %Y')
                 for measure in measures:
                     measure = float(measure)
-                    if f"delete{date}{measure}" in request.POST:
+                    print(f"delete{conv_date}{measure}")
+                    if f"delete{conv_date}{measure}" in request.POST:
                         to_delete = BodyComposition.objects.filter(user=user, date=date, bodyweight=measure)
                         to_delete.delete()
 
@@ -153,6 +155,10 @@ def bodyweight(request):
                 "measures":measures
             })
     else:
+        # for bw in bw_data:
+            # x = bw.date
+            # x = x.strftime('%b. %-d, %Y')
+            # print(x)
         return render(request, 'fitteam/bodyweight.html', {
             "weights": bw_data,
             "dates": dates,
@@ -179,6 +185,13 @@ def upload(request):
         return render(request, 'fitteam/upload.html', {
         })
 
+
+def nutrition(request):
+    return render(request, 'fitteam/nutrition.html')
+
+
+def chat(request):
+    return render(request, 'fitteam/chat.html')
 
 def bw_api(request):
     user = request.user

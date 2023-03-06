@@ -4,35 +4,61 @@
 
 <div class="container-fluid">
     <div class="row first">
-        <div class="col-7" id="chart">
+        <div class="col-9 container" id="chart">
             <div class="card">
                 <div class="card-body">
-                    <canvas id="myChart"></canvas>
+                    <div class="row">
+                        <div class="col-9">                   
+                            <canvas id="myChart"></canvas>
+                        </div>                                
+                        <div class="col-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Kezdés</span>
+                                <input type="date" class="form-control" name="" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Vége</span>
+                                <input type="date" class="form-control" name="" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-5">
+        <div class="col-3">
             <div class="card">
                 <div class="card-body">
-                    <h1>Testsúly adatok</h1>
+                    <h1 class="card-title">Testsúly</h1>
                     <form action="{% url 'bodyweight' %}" method="POST">
                         {% csrf_token %}
                         <div class="container">
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" name="bodyweight" placeholder="Testsúly">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">Testsúly</span>
+                                        <input type="text" class="form-control" name="bodyweight" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">Testzsír%</span>
+                                        <input type="text" class="form-control" name="bodyfat" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">Dátum</span>
+                                        <input type="date" class="form-control" name="date" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        <div id="date" class="form-text">Ha nem adsz meg dátumot, a mait rögzíti.</div>                                    
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <input type="date" name="date" aria-describedby="dateinput">
-                                    <div id="dateinput" class="form-text">Ha nem adsz meg dátumot, a mait rögzíti.</div>
-                                </div>
-                            </div>
-                            <div class="col bf_in">
-                                <label class="form-label" for="bfat_input">Add meg a testzsír százalékod:</label>
-                                <input class="form-control" type="text" id="bfat_input" name="bodyfat" placeholder="Testzsír százalék">
                             </div>
                             <div class="row">
-                                <input type="submit" name="add" value="Rögzítés">
+                                <div class="col">
+                                    <input type="submit" class="btn btn-primary" name="add" value="Rögzítés">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'upload' %}" class="btn btn-primary">Kép feltöltése</a>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -42,42 +68,46 @@
     </div>
     <div class="row">
         <div class="col">
-            <h1>Display information already input</h1>
-            <table class="table table-dark table-striped">
-                <thead>
-                    <tr>
-                    <th scope="col">Dátum</th>
-                    <th scope="col">Testsúly</th>
-                    <th scope="col">Testzsír %</th>
-                    <th scope="col">Zsír tömeg</th>
-                    <th scope="col">Zsírmentes testtömeg</th>
-                    <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {% for weight in weights %}
-                    <tr>
-                        <td>{{weight.date}}</td>
-                        <td>{{weight.bodyweight}}</td>
-                        {% if weight.bodyfat != 0 %}
-                        <td>{{weight.bodyfat}}</td>
-                        <td>{{weight.fm}}</td>
-                        <td>{{weight.ffm}}</td>
-                        {% else %}
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        {% endif %}
-                        <td>
-                            <form action="{% url 'bodyweight' %}" method="POST">
-                            {% csrf_token %} 
-                            <input type="submit" name="delete{{weight.date}}{{weight.bodyweight}}" value="Delete">
-                        </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Display information already input</h1>
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                            <th scope="col">Dátum</th>
+                            <th scope="col">Testsúly</th>
+                            <th scope="col">Testzsír %</th>
+                            <th scope="col">Zsír tömeg</th>
+                            <th scope="col">Zsírmentes testtömeg</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for weight in weights %}
+                            <tr>
+                                <td>{{weight.date}}</td>
+                                <td>{{weight.bodyweight}}</td>
+                                {% if weight.bodyfat != 0 %}
+                                <td>{{weight.bodyfat}}</td>
+                                <td>{{weight.fm}}</td>
+                                <td>{{weight.ffm}}</td>
+                                {% else %}
+                                <td>N/A</td>
+                                <td>N/A</td>
+                                <td>N/A</td>
+                                {% endif %}
+                                <td>
+                                    <form action="{% url 'bodyweight' %}" method="POST">
+                                    {% csrf_token %} 
+                                    <input type="submit" name="delete{{weight.date}}{{weight.bodyweight}}" value="Delete">
+                                </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

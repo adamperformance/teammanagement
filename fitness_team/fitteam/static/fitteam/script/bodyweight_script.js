@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         weights = []
         bfs = []
 
-
+    
         for (let i = 0; i < bws.length; i++) {
             x = bws[i]
             dates.push(x["date"])
@@ -24,29 +24,71 @@ document.addEventListener('DOMContentLoaded', () => {
             bfs.push(x["bodyfat"])
         }
 
+        
+
+        // the X axis has the date values (wich is good), but not an actual timeline - i.e. 1 day difference and 1 week difference
+        // is the same "lenght" --> should change the type of the X axis
 
         const ctx = document.getElementById('myChart')
 
-        new Chart(ctx, {
+        // new Chart(ctx, {
+        //     type: 'line',
+        //     data: {
+        //         // labels: day_dates,
+        //         datasets: [{
+        //             label: 'Testsúly',
+        //             data: [1,2,3,4,5],
+        //             borderWidth: 1
+        //     }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             y: {
+        //                 startarzero: false,
+        //             },
+        //             x: {
+        //                 type: 'time',
+        //                 time: {
+        //                   // Luxon format string
+        //                   tooltipFormat: 'DD T'
+        //                 },
+        //                 title: {
+        //                   display: true,
+        //                   text: 'Date'
+        //                 }
+        //             },
+        //         },
+        //         responsive: true,
+        //         maintainAspectRatio: false
+        //     }
+        // });
+
+
+        new Chart(ctx, { 
             type: 'line',
-            data: {
-                labels: day_dates,
-                datasets: [{
-                    label: 'Testsúly',
-                    data: weights,
-                    borderWidth: 1
-            }]
-            },
+            data: weights,
             options: {
-                scales: {
-                    y: {
-                        startarzero: false,
-                    }
+              scales: {
+                x: {
+                  type: 'time',
+                  time: {
+                    // Luxon format string
+                    tooltipFormat: 'DD T'
+                  },
+                  title: {
+                    display: true,
+                    text: 'Date'
+                  }
                 },
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+                y: {
+                  title: {
+                    display: true,
+                    text: 'value'
+                  }
+                }
+              },
+            },
+          });
     })
 
     
